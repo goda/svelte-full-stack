@@ -1,7 +1,8 @@
 tasks:
-  - init: npm install && npm run build
+  - init: npm install
     command: | 
       export HMR_HOST=`gp url 3000` 
+      echo $HMR_HOST
       npm run dev
 
 ports:
