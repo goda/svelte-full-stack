@@ -6,7 +6,7 @@ import type { RequestEvent } from "@sveltejs/kit/types/internal";
 let todos: Todo[] = [];
 
 
-export const api = (reqEvent: RequestEvent, todo?: Todo) => {
+export const api = (reqEvent: RequestEvent, todo?: Partial<Todo>) => {
     let body = {};
     let status = 500;
 
@@ -16,11 +16,20 @@ export const api = (reqEvent: RequestEvent, todo?: Todo) => {
             status = 200;
             break;
         case "POST":
-            todos.push(todo);
+            todos.push(todo as Todo);
             body = todo;
             status = 201;
         case "DELETE":
             todos = todos.filter(todo => todo.uid !== reqEvent.params.uid)
+            status = 200;
+            break;
+        case "PATCH":
+            todos = todos.map(t => {
+                if(t.uid === reqEvent.params.uid){
+                    t.text = todo.text
+                }
+                return t;
+            });
             status = 200;
             break;
         default:
